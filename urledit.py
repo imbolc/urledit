@@ -45,7 +45,7 @@ Working with query string:
 import urllib
 import urlparse
 
-__version__ = '1.0'
+__version__ = '1.0.1'
 
 
 class urledit(object):
@@ -62,7 +62,7 @@ class urledit(object):
     @property
     def query(self):
         self._qs_changed = True
-        if not self._query:
+        if self._query is None:
             self._query = QS(self._qs)
         return self._query
 
