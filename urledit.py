@@ -4,7 +4,7 @@ urledit
 Url parsing and editing as an object or in a functional style.
 
     >>> from urledit import urledit
-    >>> url = 'forum/showthread.php?s=9b5d99fc6a61a17cc07326714500b3ab&p=728386#post728386'
+    >>> url = 'forum/showthread.php?s=12345&p=728386#post728386'
 
 Functional style
 ----------------
@@ -22,16 +22,16 @@ Object style
 ------------
     >>> u = urledit(url)
     >>> u.scheme, u.netloc, u.path, u.qs, u.fragment
-    ('', '', 'forum/showthread.php', 's=9b5d99fc6a61a17cc07326714500b3ab&p=728386', 'post728386')
+    ('', '', 'forum/showthread.php', 's=12345&p=728386', 'post728386')
 
     >>> u.scheme, u.netloc, u.fragment = 'http', 'host.com', ''
     >>> u.join()
-    'http://host.com/forum/showthread.php?s=9b5d99fc6a61a17cc07326714500b3ab&p=728386'
+    'http://host.com/forum/showthread.php?s=12345&p=728386'
 
 Working with query string:
 
     >>> u.query
-    {'p': '728386', 's': '9b5d99fc6a61a17cc07326714500b3ab'}
+    {'p': '728386', 's': '12345'}
 
     >>> del u.query['s']
     >>> u.join()
@@ -121,8 +121,9 @@ class QS(dict):
                 vs = [vs]
             for v in vs:
                 pairs.append((k, v))
-        pairs.sort(key=lambda x: self.order.index(x[0])
-                if x[0] in self.order else len(self.order))
+        pairs.sort(
+            key=lambda x: self.order.index(x[0])
+            if x[0] in self.order else len(self.order))
         return urllib.urlencode(pairs)
 
 
