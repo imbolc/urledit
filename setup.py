@@ -3,9 +3,9 @@ import os
 import sys
 import doctest
 try:
-	from setuptools import setup
+    from setuptools import setup
 except ImportError:
-	from distutils.core import setup
+    from distutils.core import setup
 
 import urledit
 
@@ -19,22 +19,23 @@ if sys.argv[-1] == 'publish':
         sys.exit(1)
 
 setup(
-    name         = 'urledit',
-    url          = 'https://github.com/imbolc/urledit',
-    version      = urledit.__version__,
-    description  = DOC.split('===\n')[1].strip().split('\n\n')[0],
-    long_description = urledit.__doc__,
+    name='urledit',
+    url='https://github.com/imbolc/urledit',
+    version=urledit.__version__,
+    description=DOC.split('===\n')[1].strip().split('\n\n')[0],
+    long_description=urledit.__doc__,
 
-    py_modules   = ['urledit'],
+    py_modules=['urledit'],
 
-    author       = 'Imbolc',
-    author_email = 'imbolc@imbolc.name',
-    license      = 'MIT',
+    author='Imbolc',
+    author_email='imbolc@imbolc.name',
+    license='ISC',
 
-    classifiers  = [
+    classifiers=[
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: ISC License (ISCL)',
         'Programming Language :: Python',
+        'Programming Language :: Python :: 3',
     ],
 )

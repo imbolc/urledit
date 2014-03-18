@@ -15,7 +15,7 @@ Functional style
 or
 
     >>> urledit(url, scheme='http', netloc='host.com', fragment=''
-    ... ).param(s=None, a=1, b=['x', 'y', 'z']).join()
+    ... ).param(('s', None), ('a', 1), b=['x', 'y', 'z']).join()
     'http://host.com/forum/showthread.php?p=728386&a=1&b=x&b=y&b=z'
 
 Object style
@@ -30,8 +30,8 @@ Object style
 
 Working with query string:
 
-    >>> u.query
-    {'p': '728386', 's': '12345'}
+    >>> u.query == {'p': '728386', 's': '12345'}
+    True
 
     >>> del u.query['s']
     >>> u.join()
@@ -42,10 +42,15 @@ Working with query string:
     >>> u.join()
     'http://host.com/forum/showthread.php?p=728386&a=1&b=x&b=y&b=z'
 '''
-import urllib
-import urlparse
+import sys
+if sys.version_info > (3, ):
+    import urllib.parse as urlparse
+    from urllib.parse import urlencode
+else:
+    import urlparse
+    from urllib import urlencode
 
-__version__ = '1.0.1'
+__version__ = '1.1.0'
 
 
 class urledit(object):
@@ -95,8 +100,8 @@ class urledit(object):
         else:
             self.query[k] = v
 
-    __unicode__ = lambda(self): self.join()
-    __str__ = lambda(self): str(self.__unicode__())
+    __unicode__ = lambda self: self.join()
+    __str__ = lambda self: str(self.__unicode__())
 
 
 class QS(dict):
@@ -105,8 +110,6 @@ class QS(dict):
         pairs = urlparse.parse_qsl(qs)
         self.order = []
         for k, v in pairs:
-            if k not in self.order:
-                self.order.append(k)
             if k in self:
                 if not isinstance(self[k], list):
                     self[k] = [self[k]]
@@ -114,9 +117,14 @@ class QS(dict):
             else:
                 self[k] = v
 
+    def __setitem__(self, k, v):
+        if k not in self.order:
+            self.order.append(k)
+        super(QS, self).__setitem__(k, v)
+
     def join(self):
         pairs = []
-        for k, vs in self.iteritems():
+        for k, vs in self.items():
             if not isinstance(vs, list):
                 vs = [vs]
             for v in vs:
@@ -124,7 +132,7 @@ class QS(dict):
         pairs.sort(
             key=lambda x: self.order.index(x[0])
             if x[0] in self.order else len(self.order))
-        return urllib.urlencode(pairs)
+        return urlencode(pairs)
 
 
 if __name__ == '__main__':
